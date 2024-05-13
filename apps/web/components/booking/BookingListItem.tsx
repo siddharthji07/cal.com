@@ -109,6 +109,26 @@ function BookingListItem(booking: BookingItemProps) {
   const provider = guessEventLocationType(location);
 
   const bookingConfirm = async (confirm: boolean) => {
+    // Calculate the time difference in hours
+    const bookingTime = new Date(booking.startTime).getTime();
+    const cancelTime = new Date().getTime();
+    const timeDifference = (cancelTime - bookingTime) / (1000 * 60 * 60);
+
+    // Define the time range for charging (12-24 hours)
+    const minHours = 12;
+    const maxHours = 24;
+
+    // Check if the cancellation falls within the specified range
+    if (timeDifference >= minHours && timeDifference <= maxHours) {
+        // Calculate the cancellation fee and charge the client
+        const cancellationFee = booking.totalAmount * 0.1; // Assuming a 10% cancellation fee
+        // Add your logic here to charge the client
+        console.log(`Client charged $${cancellationFee} for cancelling within 12-24 hours.`);
+    } else {
+        // Do not charge the client
+        console.log(`Client not charged for cancelling outside the 12-24 hours range.`);
+    }
+
     let body = {
       bookingId: booking.id,
       confirmed: confirm,
